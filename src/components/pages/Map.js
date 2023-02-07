@@ -53,6 +53,7 @@ const Map = () => {
           longirtudeDelta: 0.05,
         }}
         // onRegionChange={region => this.state.region = region}
+        showsUserLocation={true}
       >
         {/* <View style={styles.checkboxes}>
           <Checkbox.Item
