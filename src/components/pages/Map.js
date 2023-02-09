@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Button,
-} from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { Dimensions, StyleSheet, Text, View, ScrollView } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { URL, TOKEN } from "@env";
 import axios from "axios";
-import { Checkbox } from "react-native-paper";
-
-
+import DropDownPicker from "react-native-dropdown-picker";
 
 const Map = () => {
   const [post, setPosts] = useState([]);
+  const [items, setItems] = useState([
+    { label: "北海道", value: "1" },
+    { label: "東北", value: "2" },
+    { label: "関東", value: "3" },
+    { label: "中部", value: "4" },
+    { label: "関西", value: "5" },
+    { label: "中国", value: "6" },
+    { label: "四国", value: "7" },
+    { label: "九州・沖縄", value: "8" },
+  ]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [place, setPlace] = useState(null);
 
   useEffect(() => {
     //  axios.get(url, { headers: { AccessToken: API_KEY } })
@@ -42,79 +46,87 @@ const Map = () => {
   };
 
   return (
-    <SafeAreaView>
-      <MapView
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 41.773481,
-          longitude: 140.727657,
-          latitudeDelta: 0.05,
-          longirtudeDelta: 0.05,
+    <MapView
+      style={styles.map}
+      provider={"google"}
+      initialRegion={{
+        latitude: 41.800156,
+        longitude: 140.759112,
+        latitudeDelta: 0.05,
+        longirtudeDelta: 0.05,
+      }}
+      showsUserLocation={true}
+    >
+      <DropDownPicker
+        style={{ marginTop: 20 }}
+        items={items}
+        setItems={setItems}
+        open={open}
+        value={value}
+        setOpen={setOpen}
+        setValue={setValue}
+        showArrow={true}
+        onChangeValue={(value) => {
+           setPlace(value);
         }}
-        // onRegionChange={region => this.state.region = region}
-        showsUserLocation={true}
-      >
-        {/* <View style={styles.checkboxes}>
-          <Checkbox.Item
-            label="北海道"
-            status="checked"
-            style={styles.pref}
-          />
-          <Checkbox.Item
-            label="東北"
-            status="checked"
-            style={styles.pref}
-          />
-          <Checkbox.Item
-            label="関東"
-            status="checked"
-            style={styles.pref}
-          />
-          <Checkbox.Item
-            label="中部"
-            status="checked"
-            style={styles.pref}
-          />
-          <Checkbox.Item
-            label="関西"
-            status="checked"
-            style={styles.pref}
-          />
-          <Checkbox.Item
-            label="中国"
-            status="checked"
-            style={styles.pref}
-          />
-          <Checkbox.Item
-            label="四国"
-            status="checked"
-            style={styles.pref}
-          />
-          <Checkbox.Item
-            label="九州・沖縄"
-            status="checked"
-            style={styles.pref}
-          />
-          
-        </View> */}
-        {post.map((item) => {
-          if (item.pref_code == "01") {
-            return (
-              <Marker
-                pinColor={"red"}
-                key={item.id}
-                title={item.name}
-                coordinate={{
-                  latitude: item.latitude,
-                  longitude: item.longitude,
-                }}
-              ></Marker>
-            );
+        
+      />
+
+      {post.map((item) => {
+        switch(place) {
+          case "1":
+            if (item.pref_code == "01") {
+              return (
+                <Marker
+                  pinColor={"red"}
+                  key={item.id}
+                  title={item.name}
+                  coordinate={{
+                    latitude: item.latitude,
+                    longitude: item.longitude,
+                  }}
+                ></Marker>
+              );
+            }
+            break;
+          case "2":
+            if (item.pref_code == "02") {
+              return (
+                <Marker
+                  pinColor={"red"}
+                  key={item.id}
+                  title={item.name}
+                  coordinate={{
+                    latitude: item.latitude,
+                    longitude: item.longitude,
+                  }}
+                ></Marker>
+              );
+            }
+            break;
+          case "3":
+            if (item.pref_code == "03") {
+              return (
+                <Marker
+                  pinColor={"red"}
+                  key={item.id}
+                  title={item.name}
+                  coordinate={{
+                    latitude: item.latitude,
+                    longitude: item.longitude,
+                  }}
+                ></Marker>
+              );
+            }
+            break;
           }
-        })}
-      </MapView>
-    </SafeAreaView>
+          
+          
+        })
+      
+    }
+        
+    </MapView>
   );
 };
 
@@ -124,20 +136,21 @@ const styles = StyleSheet.create({
   map: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
+    position: "relative",
   },
 
   checkboxes: {
-    display: "flex",
-    flexDirection: "row",
+    //   display: "flex",
+    //   flexDirection: "row",
+    //   width:Dimensions.get('window').width,
     position: "absolute",
-    top: 100,
-
+    bottom: 0,
   },
 
   pref: {
-  //   position: "absolute",
-  //   top: 200,
-  //   zIndex: 10,
-  backgroundColor: "white",
-   },
+    //   position: "absolute",
+    //   top: 200,
+    //   zIndex: 10,
+    backgroundColor: "white",
+  },
 });
